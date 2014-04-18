@@ -72,10 +72,11 @@ def main(args):
 
     # pulls out columns 1, 2 and 3 from each row
     # This requires a little TLC to make it work to your needs
+    #this is just a basic exmaple of how to get back your data
     for row in result:
         print row[0], row[1], row[2]    
 
-# function to establish mysql connection
+# function to establish mysql connection using either port or socket
 def mysql_connect(args, hostname, username, password, database, socket, port):
     # connect using port
     if args['--port']:
