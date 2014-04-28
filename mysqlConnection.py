@@ -7,7 +7,7 @@ and runs a query you define
 This is just meant to be a skeleton for a jumping off point to do more fun things
 with python+MySQL
 
-Usage: mysqlConnection.py [-h HOST] [-d DATABASE] [-s SOCKET | --port PORT] -u USERNAME -p [-f FILTER] -q QUERY ...
+Usage: mysqlConnection.py [-h HOST] [-d DATABASE] [-s SOCKET | --port PORT] -u USERNAME -p -q QUERY ...
 
 Options:
 --help                  you're looking at it.
@@ -17,66 +17,67 @@ Options:
 -P --port PORT          Specify port [default: 3306].
 -u --username USERNAME  Specify username.
 -p --password           Password mode.
--f --filter FILTER      Specify filter.
 -q --query QUERY        Specify query.
 """
 
 from docopt import docopt
+from prettytable import PrettyTable
 import sys
 import getpass
 import MySQLdb
 
 def main(args):
 
-    # variable imports from docopt arguments
-    if args['--password']:
-        password = getpass.getpass()
-    query = ' '.join(args['--query'])
-    hostname = args['--host']
-    database = args['--db']
-    port = args['--port']
-    socket = args['--socket']
-    username = args['--username']
-    filter = args['--filter']
+	# variable imports from docopt arguments
+	if args['--password']:
+		password = getpass.getpass()
+	query = ' '.join(args['--query'])
+	hostname = args['--host']
+	database = args['--db']
+	port = args['--port']
+	socket = args['--socket']
+	username = args['--username']
 
-    # need to cast port as an int to use in mysql connect
-    port = int(port)
+	# need to cast port as an int to use in mysql connect
+	port = int(port)
 
-    # call the mysql_connect function and set the returned cursor object to 'cur'
-    cur = mysql_connect(args, hostname, username, password, database, socket, port)
+	# call the mysql_connect function and set the returned cursor object to 'cur'
+	cur = mysql_connect(args, hostname, username, password, database, socket, port)
 
-    # print out connection information and query
-    print "hostname:", hostname
-    print "database:", database
-    if args['--port']:
-        print "port:", port
-    if args['--socket']:
-        print "socket:", socket
-    if args['--filter']:
-        print "filter:", filter
-    print "query:", query
+	# print out connection information and query
+	print "hostname:", hostname
+	if args['--db']:
+		print "database:", database
+	if args['--port']:
+		print "port:", port
+	if args['--socket']:
+		print "socket:", socket
+	print "query:", query
 
+	# Add more fun logic and things here!
+	# Maybe some QPS type fun?
+	# Or compring some queries together?
+	# Or perhaps get some troubleshooting information?
+	# Woooooo Python!
 
-    # Add more fun logic and things here!
-    # Maybe some QPS type fun?
-    # Or compring some queries together?
-    # Or perhaps get some troubleshooting information?
-    # Woooooo Python!
+	# this runs the specified query
+	cur.execute(query)
+	print "\n";
 
-    # this runs the specified query
-    cur.execute(query)
-    print "\n";
-    
-    # fetch all of the rows from the query
-    result = cur.fetchall ()
+	#create a pretty table with all of the column names in the mysql results
+	pt = PrettyTable([i[0] for i in cur.description])
+	pt.align= "l"
 
-    # pulls out columns 1, 2 and 3 from each row
-    # This requires a little TLC to make it work to your needs
-    #this is just a basic exmaple of how to get back your data
-    for row in result:
-        print row[0], row[1], row[2]    
+	# fetch all of the rows from the query
+	result = cur.fetchall ()
 
-# function to establish mysql connection using either port or socket
+	# prints each row result into a pretty table
+	for row in result:
+		pt.add_row(row)
+
+	print pt
+
+# function to establish mysql connection
 def mysql_connect(args, hostname, username, password, database, socket, port):
     # connect using port
     if args['--port']:
