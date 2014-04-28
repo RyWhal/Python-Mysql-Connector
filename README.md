@@ -10,7 +10,7 @@ Usage
 
 help page:
 ```
-Usage: mysqlConnection.py [-h HOST] [-d DATABASE] [-s SOCKET | --port PORT] -u USERNAME -p [-f FILTER] -q QUERY ...
+Usage: mysqlConnection.py [-h HOST] [-d DATABASE] [-s SOCKET | --port PORT] -u USERNAME -p -q QUERY ...
 
 Options:
 --help                  you're looking at it.
@@ -20,13 +20,12 @@ Options:
 -P --port PORT          Specify port [default: 3306].
 -u --username USERNAME  Specify username.
 -p --password           Password mode.
--f --filter FILTER      Specify filter.
 -q --query QUERY        Specify query.
 ```
 
 example usage:
-```
-~ % python mysqlConnection.py -h localhost -d information_schema --port 3306 -u ryan -p -q "select * from processlist limit 10"
+```sh
+$ python mysqlConnection.py -h localhost -d information_schema -s 3306 -u ryan -p -q "select * from processlist limit 10"
 Password:
 hostname: localhost
 database: information_schema
@@ -34,6 +33,9 @@ port: 3306
 query: select * from processlist limit 10
 
 
-835 ryan localhost
-830 ryan localhost
++-----+------+-----------+--------------------+---------+------+-----------+------------------------------------+
+| ID  | USER | HOST      | DB                 | COMMAND | TIME | STATE     | INFO                               |
++-----+------+-----------+--------------------+---------+------+-----------+------------------------------------+
+| 299 | ryan | localhost | information_schema | Query   | 0    | executing | select * from processlist limit 10 |
++-----+------+-----------+--------------------+---------+------+-----------+------------------------------------+
 ```
