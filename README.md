@@ -5,6 +5,8 @@ A basic Python that establishes a MySQL database connection and runs a query. It
 
 This script requires DocOpt (Pythonic command line arguments parser, that will make you smile http://docopt.org). Also check out their github page at https://github.com/docopt/docopt
 
+This script also requires prettytable (get it here https://pypi.python.org/pypi/PrettyTable). Also check check out their github page at https://github.com/dprince/python-prettytable
+
 Usage
 =====
 
